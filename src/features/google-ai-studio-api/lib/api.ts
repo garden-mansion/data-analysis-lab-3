@@ -1,16 +1,20 @@
-import { GoogleGenAI } from '@google/genai';
+import { ApiError, GoogleGenAI } from '@google/genai';
 import { SYSTEM_INSTRUCTIONS } from '../config/config';
 import {
   analysisResponseSchema,
   type FinancialAnalysis,
 } from '../model/zodSchemas';
+import {
+  isAiAgentApiError,
+  type AiAgentApiError,
+} from '../model/aiAgentApiError';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const sendCSVData = async (
   csvText: string,
-): Promise<FinancialAnalysis | undefined> => {
+): Promise<FinancialAnalysis | AiAgentApiError | string> => {
   try {
     const result = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -41,7 +45,7 @@ export const sendCSVData = async (
             codeExecution: {},
           },
         ],
-        responseMimeType: 'application/json',
+        // responseMimeType: 'application/json',
         responseJsonSchema: analysisResponseSchema.toJSONSchema(),
       },
     });
@@ -49,13 +53,24 @@ export const sendCSVData = async (
     const response = result.text;
 
     if (!response) {
-      throw new Error('пустой ответ от ИИ-агента');
+      return 'пустой ответ от ИИ-агента';
     }
 
     const parsedData = analysisResponseSchema.parse(JSON.parse(response));
 
     return parsedData;
   } catch (err) {
-    console.error(err);
+    try {
+      const apiError = err as ApiError;
+      const aiAgentApiError = JSON.parse(apiError.message);
+
+      if (isAiAgentApiError(aiAgentApiError)) {
+        return `${aiAgentApiError.error.code}: ${aiAgentApiError.error.message}. ${aiAgentApiError.error.status}`;
+      }
+
+      return `${apiError.status}: ${apiError.message}`;
+    } catch {
+      return 'ошибка на стороне ИИ-агента';
+    }
   }
 };

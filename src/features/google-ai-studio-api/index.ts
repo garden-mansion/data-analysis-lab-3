@@ -4,3 +4,7 @@ export type {
   ExpensesCategory,
   FinancialDynamicItem,
 } from './model/zodSchemas';
+export {
+  type AiAgentApiError,
+  isAiAgentApiError,
+} from './model/aiAgentApiError';
