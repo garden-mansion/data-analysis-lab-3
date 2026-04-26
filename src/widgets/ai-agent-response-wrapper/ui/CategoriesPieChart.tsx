@@ -24,6 +24,7 @@ export const CategoriesPieChart: FC<CategoriesPieChartProps> = ({
 
   return (
     <Pie
+      className="mb-4"
       data={{
         labels,
         datasets: [

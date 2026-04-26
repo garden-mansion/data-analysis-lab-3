@@ -4,6 +4,7 @@ import { TypographyH3, TypographyH4, TypographyP } from '@/shared/typography';
 import { type FC } from 'react';
 
 import { CategoriesPieChart } from './CategoriesPieChart';
+import { FinancialDynamicsLinearChart } from './FinancialDynamicsLinearChart';
 
 interface AIAgentResponseWrapperProps {
   aiAgentResponse: FinancialAnalysis | null;
@@ -25,6 +26,7 @@ export const AIAgentResponseWrapper: FC<AIAgentResponseWrapperProps> = ({
   const {
     analysis_text: analysisText,
     categories_pie_chart: categoriesPieChartData,
+    dynamics_chart: financialDynamicsLinearChartData,
   } = aiAgentResponse;
 
   return (
@@ -35,8 +37,12 @@ export const AIAgentResponseWrapper: FC<AIAgentResponseWrapperProps> = ({
       <TypographyH3 className="mb-4">Визуализации</TypographyH3>
 
       <TypographyH4 className="mb-2">Категории трат</TypographyH4>
-
       <CategoriesPieChart categoriesPieChartData={categoriesPieChartData} />
+
+      <TypographyH4 className="mb-2">Динамика доходов и расходов</TypographyH4>
+      <FinancialDynamicsLinearChart
+        financialDynamicsLinearChartData={financialDynamicsLinearChartData}
+      />
     </div>
   );
 };
