@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, type FC, type SubmitEventHandler } from 'react';
 import {
   Field,
@@ -10,39 +11,54 @@ import { Button } from './components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
 import { Spinner } from './components/ui/spinner';
-import { sendCSVData } from './features/google-ai-studio-api';
+import {
+  sendCSVData,
+  type FinancialAnalysis,
+} from './features/google-ai-studio-api';
+import { AIAgentResponseWrapper } from './widgets/ai-agent-response-wrapper';
+import { aiAgentPreSavedResponse } from './app/index';
 
 const App: FC = () => {
   const csvFileInputName = 'csv-file-input';
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
-    setIsLoading(true);
+  // const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
+  //   setIsLoading(true);
+  //   event.preventDefault();
+
+  //   const formData = new FormData(event.currentTarget);
+
+  //   try {
+  //     const file = formData.get(csvFileInputName) as File;
+  //     const fileExtension = file.type;
+
+  //     if (!fileExtension.toLocaleLowerCase().includes('csv')) {
+  //       setErrorMessage('Ожидаемый тип файла: .csv!');
+  //       return;
+  //     }
+  //     setErrorMessage('');
+
+  //     const csvText = await file.text();
+
+  //     const aiResponse: FinancialAnalysis | undefined =
+  //       await sendCSVData(csvText);
+
+  //     console.log('ответ от ии агента', aiResponse);
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const [aiAgentResponse, setAiAgentResponse] =
+    useState<FinancialAnalysis | null>(null);
+
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    try {
-      const file = formData.get(csvFileInputName) as File;
-      const fileExtension = file.type;
-
-      if (!fileExtension.toLocaleLowerCase().includes('csv')) {
-        setErrorMessage('Ожидаемый тип файла: .csv!');
-        return;
-      }
-      setErrorMessage('');
-
-      const csvText = await file.text();
-
-      const aiResponse = await sendCSVData(csvText);
-
-      console.log('ответ от ии агента', aiResponse);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+    setAiAgentResponse(aiAgentPreSavedResponse);
   };
 
   return (
@@ -84,6 +100,11 @@ const App: FC = () => {
           </Field>
         </FieldGroup>
       </form>
+
+      <AIAgentResponseWrapper
+        isLoading={isLoading}
+        aiAgentResponse={aiAgentResponse}
+      />
     </div>
   );
 };
