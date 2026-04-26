@@ -1,0 +1,22 @@
+version: "3"
+
+tasks:
+  install:
+    desc: "установить зависимости в проект без изменения bun.lock'а"
+    cmds:
+      - bun install --frozen-lockfile
+    sources:
+      - bun.lock
+      - package.json
+    generates:
+      - node_modules/.modules.yaml
+  dev:
+    desc: "запускаем локально (http://localhost:3000)"
+    deps: [install]
+    cmds:
+      - bun run dev
+
+  default:
+    desc: "Установить зависимости и запустить dev-сервер"
+    cmds:
+      - task: dev
