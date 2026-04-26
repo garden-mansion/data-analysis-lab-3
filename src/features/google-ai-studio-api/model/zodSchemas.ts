@@ -28,3 +28,5 @@ export const analysisResponseSchema = z.object({
 });
 
 export type FinancialAnalysis = z.infer<typeof analysisResponseSchema>;
+export type ExpensesCategory = z.infer<typeof categorySchema>;
+export type FinancialDynamicItem = z.infer<typeof dynamicsSchema>;

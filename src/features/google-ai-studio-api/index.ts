@@ -1,2 +1,6 @@
 export { sendCSVData } from './lib/api';
-export type { FinancialAnalysis } from './model/zodSchemas';
+export type {
+  FinancialAnalysis,
+  ExpensesCategory,
+  FinancialDynamicItem,
+} from './model/zodSchemas';
