@@ -1,75 +1,40 @@
-# React + TypeScript + Vite
+# 🏦 AI Financial Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интеллектуальное веб-приложение для анализа банковских выписок (CSV) с использованием ИИ-агента на базе **Google Gemini 3 Flash/Preview**. 
 
-Currently, two official plugins are available:
+Проект демонстрирует реализацию агентной архитектуры, где модель не просто отвечает на вопросы, а выполняет реальный код для анализа данных пользователя.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🌟 Основные возможности
 
-## React Compiler
+- **Загрузка CSV:** Удобный интерфейс для загрузки банковских файлов.
+- **AI-Аналитик (Code Execution):** Агент самостоятельно пишет и исполняет Python-код (pandas) для вычисления точных метрик, исключая галлюцинации.
+- **Structured Outputs:** Гарантированно корректные данные для графиков благодаря интеграции **Zod** и **JSON Schema**.
+- **Интерактивные графики:** Визуализация топ-категорий трат и динамики доходов/расходов.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 🛠 Технологический стек
 
-Note: This will impact Vite dev & build performances.
+- **Frontend:** React, Vite, TypeScript, Tailwind CSS, Bun, Shadcn.
+- **AI:** Google AI Studio (Flash/Preview).
+- **Validation:** Zod + zod-to-json-schema.
+- **Automation:** Taskfile (go-task).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Инструкция по запуску
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. Установка Task
+Для автоматизации запуска в проекте используется инструмент **Task**. Если он у вас не установлен, выполните одну из команд:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* **NPM:** `npm install -g @go-task/cli`
+* **Windows (Winget):** `winget install Task.Task`
+* **Windows (Choco):** `choco install go-task`
+* **macOS (Homebrew):** `brew install go-task`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Настройка переменных окружения
+В корне проекта уже лежит .env с API ключом, после проверки - .env будет удален из репозитория.
+
+### 3. Запуск
+Запустить в терминале
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+task
 ```
