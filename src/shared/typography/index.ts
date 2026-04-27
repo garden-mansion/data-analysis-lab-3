@@ -1,1 +1,6 @@
-export { TypographyH3, TypographyH4, TypographyP } from './ui/typography';
+export {
+  TypographyH2,
+  TypographyH3,
+  TypographyH4,
+  TypographyP,
+} from './ui/typography';

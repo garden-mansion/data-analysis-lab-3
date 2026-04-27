@@ -5,6 +5,19 @@ interface TypographyProps {
   className?: string;
 }
 
+export function TypographyH2({
+  children,
+  className: className_ = '',
+}: TypographyProps) {
+  return (
+    <h2
+      className={`scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 ${className_}}`}
+    >
+      {children}
+    </h2>
+  );
+}
+
 export function TypographyH3({
   children,
   className: className_ = '',
