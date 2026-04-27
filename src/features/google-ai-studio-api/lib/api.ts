@@ -12,9 +12,17 @@ import {
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
-export const sendCSVData = async (
-  csvText: string,
-): Promise<FinancialAnalysis | AiAgentApiError | string> => {
+interface SendCsvDataParams {
+  csvText: string;
+  userPrompt?: string;
+}
+
+export const sendCSVData = async ({
+  csvText,
+  userPrompt,
+}: SendCsvDataParams): Promise<
+  FinancialAnalysis | AiAgentApiError | string
+> => {
   try {
     const result = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -27,6 +35,9 @@ export const sendCSVData = async (
             },
             {
               text: 'Проведи анализ и подготовь данные в соответствии с заданной структурой',
+            },
+            {
+              text: `Дополнительно: ${userPrompt ?? 'дополнительной аналитики не требуется'}`,
             },
           ],
         },
@@ -45,7 +56,7 @@ export const sendCSVData = async (
             codeExecution: {},
           },
         ],
-        // responseMimeType: 'application/json',
+        responseMimeType: 'application/json',
         responseJsonSchema: analysisResponseSchema.toJSONSchema(),
       },
     });

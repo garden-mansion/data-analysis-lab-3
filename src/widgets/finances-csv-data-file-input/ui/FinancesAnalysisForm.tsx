@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
 import {
   isAiAgentApiError,
   sendCSVData,
@@ -23,18 +24,20 @@ import {
   type SubmitEventHandler,
 } from 'react';
 
-interface FinancesCSVDataFileInputProps {
+interface FinancesAnalysisFormProps {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setAiAgentResponse: Dispatch<SetStateAction<FinancialAnalysis | null>>;
 }
 
-export const FinancesCSVDataFileInput: FC<FinancesCSVDataFileInputProps> = ({
+export const FinancesAnalysisForm: FC<FinancesAnalysisFormProps> = ({
   isLoading,
   setIsLoading,
   setAiAgentResponse,
 }) => {
   const csvFileInputName = 'csv-file-input';
+  const userPromptTextareaName = 'user-prompt-textarea';
+
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
@@ -55,8 +58,9 @@ export const FinancesCSVDataFileInput: FC<FinancesCSVDataFileInputProps> = ({
 
       const csvText = await file.text();
 
+      const userPrompt = formData.get(userPromptTextareaName)?.toString();
       const aiResponse: FinancialAnalysis | string | AiAgentApiError =
-        await sendCSVData(csvText);
+        await sendCSVData({ csvText, userPrompt });
 
       if (typeof aiResponse === 'string') {
         setErrorMessage(aiResponse);
@@ -74,7 +78,7 @@ export const FinancesCSVDataFileInput: FC<FinancesCSVDataFileInputProps> = ({
       setAiAgentResponse(aiResponse);
     } catch (err) {
       alert(
-        'возникла ошибка, откройте консоль для подробной информации (FN + F12)',
+        'возникла ошибка, откройте консоль для подробной информации (FN + F12/F12)',
       );
       /* eslint-disable no-console */
       console.error(err);
@@ -103,6 +107,26 @@ export const FinancesCSVDataFileInput: FC<FinancesCSVDataFileInputProps> = ({
 
           <FieldDescription>
             Выберите CSV файл с данными о ваших тратах
+          </FieldDescription>
+        </Field>
+
+        <Field>
+          <FieldLabel
+            htmlFor={userPromptTextareaName}
+            className="text-zinc-500"
+          >
+            Дополнительный промпт
+          </FieldLabel>
+
+          <Textarea
+            name={userPromptTextareaName}
+            id={userPromptTextareaName}
+            placeholder="(Необязательно): дополнительные требования к аналитике"
+          />
+
+          <FieldDescription>
+            например можно попросить узнать, от кого чаще всего приходили
+            переводы, с каких категорий больше всего приходило кешбека и т.д.
           </FieldDescription>
         </Field>
 
